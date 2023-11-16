@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TbMenu>
+
+<div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown" style="">
+    <div class="menu-logo">
+        <a href="index.html"><img src="~/assets/images/logo.png" alt=""></a>
+    </div>
+    <ul class="nav navbar-nav">
+        @foreach (var item in Model.Where(i => i.Levels == 1))
+        {
+            var menuId = item.MenuId;
+            var menuChild = Model.Where(i => i.ParentId == menuId).OrderBy(i => i.Position);
+            <li class="sub-menu">
+                <a href="/@item.Alias">
+                    @item.Title
+                    @if (menuChild.Count() > 0)
+                    {
+                        <i class="fa fa-chevron-down"></i>
+                    }
+                </a>
+                @if (menuChild.Count() > 0)
+                {
+                    <ul class="sub-menu">
+                        @foreach (var itemChild in menuChild)
+                        {
+                            <li>
+                                <a href="/@itemChild.Alias">@itemChild.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+    <div class="nav-social-link">
+        <a href="javascript:;"><i class="fa fa-facebook"></i></a>
+        <a href="javascript:;"><i class="fa fa-google-plus"></i></a>
+        <a href="javascript:;"><i class="fa fa-linkedin"></i></a>
+    </div>
+</div>
+
+<script src="~/assets/js/menu.js"></script>
