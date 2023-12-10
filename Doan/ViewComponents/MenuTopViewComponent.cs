@@ -1,7 +1,7 @@
 ﻿using Doan.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace PTUDW_03.ViewComponents
+namespace Doan.ViewComponents
 {
     public class MenuTopViewComponent : ViewComponent
     {

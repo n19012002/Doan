@@ -19,12 +19,6 @@ public partial class TbBlog
 
     public string? Image { get; set; }
 
-    public string? SeoTitle { get; set; }
-
-    public string? SeoDescription { get; set; }
-
-    public string? SeoKeywords { get; set; }
-
     public DateTime? CreatedDate { get; set; }
 
     public string? CreatedBy { get; set; }

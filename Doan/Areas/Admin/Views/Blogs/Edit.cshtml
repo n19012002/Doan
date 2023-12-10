@@ -1,0 +1,114 @@
+﻿@model Doan.Models.TbBlog
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Main container start -->
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Edit Blog</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Edit Blog</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget-box">
+                    <div class="wc-title">
+                        <h4>Edit Blog</h4>
+                    </div>
+                    <div class="widget-inner">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="BlogId" />
+
+                            <div class="form-group">
+                                <label asp-for="Title" class="control-label"></label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Alias" class="control-label"></label>
+                                <input asp-for="Alias" class="form-control" />
+                                <span asp-validation-for="Alias" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CategoryId" class="control-label"></label>
+                                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Detail" class="control-label"></label>
+                                <textarea asp-for="Detail" class="form-control"></textarea>
+                                <span asp-validation-for="Detail" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Image" class="control-label"></label>
+                                <input asp-for="Image" class="form-control" />
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CreatedDate" class="control-label"></label>
+                                <input asp-for="CreatedDate" class="form-control" />
+                                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CreatedBy" class="control-label"></label>
+                                <input asp-for="CreatedBy" class="form-control" />
+                                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ModifiedDate" class="control-label"></label>
+                                <input asp-for="ModifiedDate" class="form-control" />
+                                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="ModifiedBy" class="control-label"></label>
+                                <input asp-for="ModifiedBy" class="form-control" />
+                                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="AccountId" class="control-label"></label>
+                                <select asp-for="AccountId" class="form-control" asp-items="ViewBag.AccountId"></select>
+                                <span asp-validation-for="AccountId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="IsActive" class="control-label"></label>
+                                <input asp-for="IsActive" class="form-control" />
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn green radius-xl outline" />
+                                <a asp-action="Index" class="btn red outline radius-xl btn-delete">Back to List</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main container end -->
+
+

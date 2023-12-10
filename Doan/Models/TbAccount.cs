@@ -23,6 +23,8 @@ public partial class TbAccount
 
     public bool IsActive { get; set; }
 
+    public virtual ICollection<Profile> Profiles { get; set; } = new List<Profile>();
+
     public virtual TbRole? Role { get; set; }
 
     public virtual ICollection<TbBlog> TbBlogs { get; set; } = new List<TbBlog>();

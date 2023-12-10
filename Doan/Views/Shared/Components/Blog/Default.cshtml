@@ -1,0 +1,65 @@
+﻿@model IEnumerable<TbBlog>
+
+@{
+    List<TbBlogComment> blogComment = ViewBag.blogComment;
+}
+
+<style>
+	.post-title {
+		display: block;
+		display: -webkit-box;
+		-webkit-line-clamp: 2; /* số dòng hiển thị */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.short-desc {
+		display: block;
+		display: -webkit-box;
+		-webkit-line-clamp: 2; /* số dòng hiển thị */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>
+<!-- Recent News -->
+<div class="section-area section-sp2">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 heading-bx left">
+				<h2 class="title-head">Recent <span>News</span></h2>
+				<p>It is a long established fact that a reader will be distracted by the readable content of a page</p>
+			</div>
+		</div>
+		<div class="recent-news-carousel owl-carousel owl-btn-1 col-12 p-lr0">
+			@foreach (var item in Model)
+			{
+				var sUrl = $"/blog/{item.Alias}-{item.BlogId}.html";
+				var listComment = blogComment.Where(i => i.BlogId == item.BlogId);
+				<div class="item">
+					<div class="recent-news">
+						<div class="action-box">
+							<img src="~/assets/images/blog/latest-blog/pic1.jpg" alt="">
+						</div>
+						<div class="info-bx">
+							<ul class="media-post">
+								<li><a href="#"><i class="fa fa-calendar"></i>@item.CreatedDate.Value.ToString("dd/MM/yyyy")</a></li>
+								<li><a href="#"><i class="fa fa-user"></i>@item.CreatedBy</a></li>
+							</ul>
+							<h5 class="post-title"><a href="@sUrl">@item.Title</a></h5>
+							<p class="short-desc">@item.Description</p>
+							<div class="post-extra">
+								<a href="@sUrl" class="btn-link">READ MORE</a>
+								<a href="#" class="comments-bx"><i class="fa fa-comments-o"></i>@listComment.Count() Comment</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+			
+
+		</div>
+	</div>
+</div>
+<!-- Recent News End -->
