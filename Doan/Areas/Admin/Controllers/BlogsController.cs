@@ -63,6 +63,8 @@ namespace Doan.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                tbBlog.CreatedDate = DateTime.Now;
+                tbBlog.ModifiedDate = DateTime.Now;
                 _context.Add(tbBlog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -106,6 +108,7 @@ namespace Doan.Areas.Admin.Controllers
             {
                 try
                 {
+                    tbBlog.ModifiedDate = DateTime.Now;
                     _context.Update(tbBlog);
                     await _context.SaveChangesAsync();
                 }
@@ -138,7 +141,7 @@ namespace Doan.Areas.Admin.Controllers
             var tbBlog = await _context.TbBlogs
                 .Include(t => t.Account)
                 .Include(t => t.Category)
-                .Include(t => t.TbBlogComments)
+                
                 .FirstOrDefaultAsync(m => m.BlogId == id);
             if (tbBlog == null)
             {
@@ -148,33 +151,51 @@ namespace Doan.Areas.Admin.Controllers
             return View(tbBlog);
         }
 
-        // POST: Admin/Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
         // [ValidateAntiForgeryToken]
-        public bool DeleteConfirmed(int id)
+        public async Task<bool> DeleteConfirmed(int id)
         {
             try
             {
-                if (_context.TbBlogs == null)
-                {
-                    return false;
-                }
-                var tbBlog =  _context.TbBlogs.Find(id);
+                var tbBlog = await _context.TbBlogs.FindAsync(id);
                 if (tbBlog != null)
                 {
                     _context.TbBlogs.Remove(tbBlog);
+                    await _context.SaveChangesAsync(); 
+                    return true;
                 }
-
-                 _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
                 return false;
             }
-
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine($"Error in DeleteConfirmed: {ex.Message}");
+                return false;
+            }
         }
 
+
+
+        [HttpPost]
+        public IActionResult ToggleIsActive(int id)
+        {
+            var blog = _context.TbBlogs.Find(id);
+
+            if (blog != null)
+            {
+                // Chuyển đổi trạng thái
+                blog.IsActive = !blog.IsActive;
+
+                
+                _context.SaveChanges();
+
+               
+                return Json(true);
+            }
+
+           
+            return Json(false);
+        }
 
         private bool TbBlogExists(int id)
         {

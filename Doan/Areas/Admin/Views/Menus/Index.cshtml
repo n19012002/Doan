@@ -5,92 +5,190 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<style>
+    .badge-green {
+        background-color: #28a745; /* Màu xanh */
+        color: #fff; /* Màu chữ trắng */
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alias)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Levels)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParentId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Position)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alias)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Levels)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Position)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MenuId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MenuId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MenuId">Delete</a>
-            </td>
-        </tr>
+    .badge-red {
+        background-color: #dc3545; /* Màu đỏ */
+        color: #fff; /* Màu chữ trắng */
+    }
+
+    /* Thêm CSS cho bảng và phần chứa bảng */
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+    }
+</style>
+
+<!-- Main container start -->
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Menu List</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Menu List</li>
+            </ul>
+        </div>
+
+        <!-- Add Create New Button -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <a asp-action="Create" class="btn navy radius-xl outline">Create New</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Your Menu List -->
+            <div class="col-lg-12 m-b30 table-container">
+                <!-- Thêm class "table-container" ở đây -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MenuId</th>
+                            <th>Title</th>
+                            <th>Alias</th>
+                            <th>Description</th>
+                            <th>Levels</th>
+                            <th>ParentId</th>
+                            <th>Position</th>
+
+                            <th>IsActive</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var i = 1;
+                        }
+                        @foreach (var menu in Model)
+                        {
+                            <tr id="tr_@menu.MenuId">
+                                <td>@(i++)</td>
+                                <td>@menu.Title</td>
+                                <td>@menu.Alias</td>
+                                <td>@menu.Description</td>
+                                <td>@menu.Levels</td>
+                                <td>@menu.ParentId</td>
+                                <td>@menu.Position</td>
+                                
+                                <td>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@menu.MenuId" data-id="@menu.MenuId" data-isactive="@menu.IsActive.ToString().ToLower()" checked="@menu.IsActive" />
+                                        <label class="custom-control-label" for="isActiveCheckbox_@menu.MenuId"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@menu.MenuId" class="btn blue radius-xl outline">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@menu.MenuId" class="btn green radius-xl outline">Details</a>
+                                    <a data-toggle="modal" data-target="#deleteConfirmationModal" data-id="@menu.MenuId" class="btn red outline radius-xl btn-delete">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Your Menu List END -->
+        </div>
+    </div>
+</main>
+
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn green radius-xl outline" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn red outline radius-xl " id="confirmDeleteBtn">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let _id; // Thêm biến cục bộ
+
+            $(".btn-delete").click(function () {
+                _id = $(this).data("id");
+
+                // Mở modal
+                $("#deleteConfirmationModal").modal("show");
+
+                // Xác nhận xóa 
+                $("#confirmDeleteBtn").click(function () {
+                    $.ajax({
+                        url: "/admin/menus/delete",
+                        type: "POST",
+                        data: { id: _id },
+                        success: function (result) {
+                            if (result) {
+                                $("#tr_" + _id).remove();
+                                toastr.success('Xóa thành công');
+                            }
+                            else {
+                                toastr.error('Xóa không thành công');
+                            }
+                        }
+                    });
+
+                    // Đóng modal sau khi xác nhận xóa
+                    $("#deleteConfirmationModal").modal("hide");
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".custom-control-input").change(function () {
+                var _id = $(this).data("id");
+                var isChecked = $(this).prop("checked");
+
+                // Gửi yêu cầu AJAX để cập nhật trạng thái IsActive
+                $.ajax({
+                    url: "/admin/menus/toggleIsActive",
+                    type: "POST",
+                    data: { id: _id, isActive: isChecked },
+                    success: function (result) {
+                        if (result) {
+                            // Cập nhật giao diện người dùng
+                            $(".custom-control-input[data-id='" + _id + "']").data("isactive", isChecked);
+                            toastr.success('Đã cập nhật trạng thái');
+                        } else {
+                            toastr.error('Cập nhật không thành công');
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
 }
-    </tbody>
-</table>

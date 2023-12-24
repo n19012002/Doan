@@ -5,6 +5,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+
 <!--Main container start -->
 <main class="ttr-wrapper">
     <div class="container-fluid">
@@ -19,7 +20,7 @@
         <!-- Add Create New Button -->
         <div class="row mb-4">
             <div class="col-lg-12">
-                <a asp-action="Create" class="btn btn-primary">Create New</a>
+                <a asp-action="Create" class="btn navy radius-xl outline">Create New</a>
             </div>
         </div>
 
@@ -58,8 +59,17 @@
                                             </li>
 
                                             <li class="card-courses-stats">
-                                                <a href="#" class="btn button-sm green radius-xl">@blog.IsActive</a>
+                                                <h5>Active</h5>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@blog.BlogId" data-id="@blog.BlogId" data-isactive="@blog.IsActive.ToString().ToLower()" checked="@blog.IsActive" />
+                                                    
+                                                    <label class="custom-control-label" for="isActiveCheckbox_@blog.BlogId">
+                                                        
+                                                    </label>
+                                                </div>
                                             </li>
+
+
                                         </ul>
                                     </div>
                                     <div class="row card-courses-dec">
@@ -106,36 +116,32 @@
 </div>
 
 @section Scripts {
+    <script src="~/admin/assets/js/delete.js">
+</script>
+
     <script>
         $(document).ready(function () {
-            $(".btn-delete").click(function () {
-                _id = $(this).data("id");
+            $(".custom-control-input").change(function () {
+                var _id = $(this).data("id");
+                var isChecked = $(this).prop("checked");
 
-                // Mở modal xác nhận xóa
-                $("#deleteConfirmationModal").modal("show");
-
-                // Xác nhận xóa khi nhấn nút Xóa trong modal
-                $("#confirmDeleteBtn").click(function () {
-                    $.ajax({
-                        url: "/admin/blogs/delete",
-                        type: "POST",
-                        data: { id: _id },
-                        success: function (result) {
-                            if (result) {
-                                $("#tr_" + _id).remove();
-                                toastr.success('Xóa thành công');
-                            }
-                            else {
-                                toastr.error('Xóa không thành công');
-                            }
+                // Gửi yêu cầu AJAX để cập nhật trạng thái IsActive
+                $.ajax({
+                    url: "/admin/blogs/toggleIsActive",
+                    type: "POST",
+                    data: { id: _id, isActive: isChecked },
+                    success: function (result) {
+                        if (result) {
+                            // Cập nhật giao diện người dùng
+                            $(".custom-control-input[data-id='" + _id + "']").data("isactive", isChecked);
+                            toastr.success('Đã cập nhật trạng thái');
+                        } else {
+                            toastr.error('Cập nhật không thành công');
                         }
-                    });
-
-                    // Đóng modal sau khi xác nhận xóa
-                    $("#deleteConfirmationModal").modal("hide");
+                    }
                 });
             });
-        })
+        });
     </script>
 }
 

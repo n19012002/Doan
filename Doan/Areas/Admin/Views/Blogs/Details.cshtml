@@ -20,43 +20,93 @@
                     <div class="card-body">
                         <h4 class="card-title">Blog Details</h4>
                         <hr />
-                        <dl class="row">
-                            <dt class="col-sm-3">Title:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Title)</dd>
+                        <form>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Title:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Alias:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Alias)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Alias:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Alias)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Description:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Description:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Description)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Detail:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Detail)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Detail:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Detail)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Image:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Image)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Image:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static"><img src="@Model.Image"/></p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Created Date:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedDate)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Created Date:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.CreatedDate)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Created By:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedBy)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Created By:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.CreatedBy)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Modified Date:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.ModifiedDate)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Modified Date:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.ModifiedDate)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Modified By:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.ModifiedBy)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Modified By:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.ModifiedBy)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Is Active:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.IsActive)</dd>
+                            <div class="form-group">
+                                <label asp-for="IsActive" class="control-label"></label>
+                                <div class="custom-control custom-switch">
+                                    @Html.CheckBox("IsActive", Model.IsActive, new { @class = "custom-control-input" })
+                                    <label class="custom-control-label" for="IsActive"></label>
+                                </div>
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
 
-                            <dt class="col-sm-3">Account:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Account.AccountId)</dd>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Account:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Account.AccountId)</p>
+                                </div>
+                            </div>
 
-                            <dt class="col-sm-3">Category:</dt>
-                            <dd class="col-sm-9">@Html.DisplayFor(model => model.Category.CategoryId)</dd>
-                        </dl>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Category:</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">@Html.DisplayFor(model => model.Category.CategoryId)</p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="card-footer">
                         <a asp-action="Edit" asp-route-id="@Model?.BlogId" class="btn green radius-xl outline">Edit</a>

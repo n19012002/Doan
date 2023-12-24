@@ -60,6 +60,8 @@ namespace Doan.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                tbMenu.CreatedDate = DateTime.Now;
+                tbMenu.ModifiedDate = DateTime.Now;
                 _context.Add(tbMenu);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -99,6 +101,7 @@ namespace Doan.Areas.Admin.Controllers
             {
                 try
                 {
+                    tbMenu.ModifiedDate = DateTime.Now;
                     _context.Update(tbMenu);
                     await _context.SaveChangesAsync();
                 }
@@ -138,23 +141,53 @@ namespace Doan.Areas.Admin.Controllers
 
         // POST: Admin/Menus/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<bool> DeleteConfirmed(int id)
         {
-            if (_context.TbMenus == null)
+            try
             {
-                return Problem("Entity set 'HarmicContext.TbMenus'  is null.");
+                if (_context.TbMenus == null)
+                {
+                    return false;
+                }
+
+                var tbMenu = await _context.TbMenus.FindAsync(id);
+
+                if (tbMenu != null)
+                {
+                    _context.TbMenus.Remove(tbMenu);
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
             }
-            var tbMenu = await _context.TbMenus.FindAsync(id);
-            if (tbMenu != null)
+            catch
             {
-                _context.TbMenus.Remove(tbMenu);
+                return false;
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
+
+        // Trong controller của bạn
+        [HttpPost]
+        public IActionResult ToggleIsActive(int id)
+        {
+            var menu = _context.TbMenus.Find(id);
+
+            if (menu != null)
+            {
+                
+                menu.IsActive = !menu.IsActive;
+
+              
+                _context.SaveChanges();
+
+                
+                return Json(true);
+            }
+
+           
+            return Json(false);
+        }
         private bool TbMenuExists(int id)
         {
           return (_context.TbMenus?.Any(e => e.MenuId == id)).GetValueOrDefault();

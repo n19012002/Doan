@@ -375,20 +375,27 @@ Theme Version:	1.0.0
 				}
 				
 				/* set Countdown */
-				var setCountDown = function(){
-					if(!checkSelectorExistence('.countdown')){return;}
-					var currentDate = new Date();
-					var months = ["January", "February", 
-									  "March", "April", 
-									  "May", "June", 
-									  "July", "August", 
-									  "September", "October", 
-									  "November", "December"];
-					currentDate.setDate(currentDate.getDate() + 10);
-					currentDate =  currentDate.getDate() + " " + months[currentDate.getMonth()] + " " + currentDate.getFullYear(); 
-					/*You can use this format : 01 January 2019 */
-					$('.countdown').countdown({date: currentDate+' 23:5'});
+			var setCountDown = function () {
+				if (!checkSelectorExistence('.countdown')) {
+					return;
 				}
+
+				// Kiểm tra xem phần tử .countdown có tồn tại không
+				if (jQuery('.countdown').length > 0) {
+					var currentDate = new Date();
+					var months = ["January", "February",
+						"March", "April",
+						"May", "June",
+						"July", "August",
+						"September", "October",
+						"November", "December"];
+					currentDate.setDate(currentDate.getDate() + 10);
+					currentDate = currentDate.getDate() + " " + months[currentDate.getMonth()] + " " + currentDate.getFullYear();
+					/*You can use this format : 01 January 2019 */
+					$('.countdown').countdown({ date: currentDate + ' 23:5' });
+				}
+			};
+
 				
 				/* Stylish Scroll */
 				var setStylishScroll = function(){

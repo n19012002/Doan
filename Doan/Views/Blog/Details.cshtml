@@ -40,8 +40,9 @@
 											<li><a href="#"><i class="fa fa-comments-o"></i>@blogComment.Count() Comment</a></li>
 										</ul>
 										<h5 class="post-title"><a href="#">@Model.Title</a></h5>
-										<p>@Model.Description</p>
-										
+										<h6>@Model.Description</h6>
+								<p>@Html.Raw(Model.Detail)</p>
+								
 										<div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
 										<div class="widget_tag_cloud">
 											<h6>TAGS</h6>

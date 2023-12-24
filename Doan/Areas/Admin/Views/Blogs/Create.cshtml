@@ -41,66 +41,54 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="Description" class="control-label">Description</label>
-                                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                                <input asp-for="Description" class="form-control" />
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
+
                             <div class="form-group">
                                 <label asp-for="Detail" class="control-label">Detail</label>
-                                <input asp-for="Detail" class="form-control" />
+                                <textarea asp-for="Detail" class="form-control summernote" rows="4"></textarea>
                                 <span asp-validation-for="Detail" class="text-danger"></span>
                             </div>
+
                             <!-- Add other fields here -->
                         </div>
 
                         <div class="col-md-6">
                            
 
+                            <div class="from-group">
+                                <label class="control-lable">Images</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-success" type="button" onclick="openDialog()">Choose a pic</button>
+                                    </div>
+                                    <input type="text" class="form-control" asp-for="Image" id="file_input" aria-describedby="button-addon2">
+                                </div>
+                            </div>
+
                             
 
                             <div class="form-group">
-                                <label asp-for="Image" class="control-label">Image</label>
-                                <input asp-for="Image" class="form-control" />
-                                <span asp-validation-for="Image" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="CreatedDate" class="control-label">Created Date</label>
-                                <input asp-for="CreatedDate" class="form-control" />
-                                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="CreatedBy" class="control-label">Created By</label>
-                                <input asp-for="CreatedBy" class="form-control" />
-                                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="ModifiedDate" class="control-label">Modified Date</label>
-                                <input asp-for="ModifiedDate" class="form-control" />
-                                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="ModifiedBy" class="control-label">Modified By</label>
-                                <input asp-for="ModifiedBy" class="form-control" />
-                                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="AccountId" class="control-label">Account</label>
-                                <select asp-for="AccountId" class="form-control" asp-items="ViewBag.AccountId"></select>
-                                <span asp-validation-for="AccountId" class="text-danger"></span>
+                                <label class="control-label">Is Active:</label>
+                                <input type="checkbox" name="IsActive" value="true" />
+                                <input type="hidden" name="IsActive" value="false" />
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        <input type="submit" value="Create" class="btn green radius-xl outline" />
+                        <a asp-action="Index" class="btn red outline radius-xl btn-delete">Back to List</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </main>
+@{
+    var summernote = new Doan.Areas.Admin.Models.Summernote("#Detail");
+
+}
+<partial name="_Summernote" model="summernote" />
