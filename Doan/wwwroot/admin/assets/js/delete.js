@@ -1,14 +1,14 @@
 ﻿$(document).ready(function () {
-    let _id; // Thêm biến cục bộ
+    let _id; 
 
     $(".btn-delete").click(function () {
         _id = $(this).data("id");
 
-        // Mở modal xác nhận xóa
+
         $("#deleteConfirmationModal").modal("show");
     });
 
-    // Xác nhận xóa khi nhấn nút Xóa trong modal
+ 
     $("#confirmDeleteBtn").click(function () {
         $.ajax({
             url: "/admin/blogs/delete",
@@ -23,9 +23,9 @@
                 }
             }
 
-            // Đừng đặt đoạn code đóng modal ở đây
+
         });
-        // Đóng modal sau khi xác nhận xóa
+
         $("#deleteConfirmationModal").modal("hide");
     });
 
