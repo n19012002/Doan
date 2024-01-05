@@ -116,8 +116,8 @@
 														<input type="text" value="" placeholder="Email" name="email" id="email">
 													</p>
 													<p class="comment-form-url">
-														<label for="url">Website</label>
-														<input type="text" value="" placeholder="Website" name="url" id="url">
+														<label for="phone">Website</label>
+														<input type="text" value="" placeholder="phone" name="phone" id="phone">
 													</p>
 													<p class="comment-form-comment">
 														<label for="comment">Comment</label>
@@ -207,3 +207,40 @@
 			</div>
 		</div>
 		<!-- Content END-->
+@section Scripts{
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			$("#commentform").submit(function (event) {
+				event.preventDefault();
+
+				var id = "@Model.BlogId";
+				var name = $("#author").val();
+				var phone = $("#phone").val();
+				var email = $("#email").val();
+				var message = $("#comment").val();
+
+				$.ajax({
+					type: "POST",
+					url: "/Blog/Create",
+					data: { id: id, name: name, phone: phone, email: email, message: message },
+					success: function (response) {
+						if (response.status) {
+							toastr.success('Đã bình luật thành công!Vui lòng chờ duyệt');						
+							setTimeout(function () {
+								location.reload();
+							}, 4000); 
+						} else {
+							toastr.error('Gửi không thành công');
+						}
+					},
+					error: function (error) {
+						toastr.error('Gửi không thành công');
+					}
+				});
+			});
+		});
+	</script>
+}

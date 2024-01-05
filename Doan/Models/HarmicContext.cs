@@ -18,15 +18,17 @@ public partial class HarmicContext : DbContext
 
     public virtual DbSet<About> Abouts { get; set; }
 
-    public DbSet<AdminMenu> AdminMenus { get; set; }
+	public DbSet<AdminMenu> AdminMenus { get; set; }
 
-    public virtual DbSet<Course> Courses { get; set; }
+	public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Event> Events { get; set; }
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
+
+    public virtual DbSet<Slider> Sliders { get; set; }
 
     public virtual DbSet<TbAccount> TbAccounts { get; set; }
 
@@ -40,38 +42,34 @@ public partial class HarmicContext : DbContext
 
     public virtual DbSet<TbMenu> TbMenus { get; set; }
 
-    public virtual DbSet<TbNews> TbNews { get; set; }
-
     public virtual DbSet<TbRole> TbRoles { get; set; }
 
     public virtual DbSet<TbSubscribe> TbSubscribes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=ASUSFX517\\SQLEXPRESS;Initial Catalog=ReviewVinh;Integrated Security=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=ASUSFX517\\SQLEXPRESS;Initial Catalog=Harmic;Integrated Security=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<About>(entity =>
         {
-            entity.HasKey(e => e.AboutId).HasName("PK__About__717FC95C30FCBD01");
+            entity.HasKey(e => e.AboutId).HasName("PK__About__717FC95C74B8FA0D");
 
             entity.ToTable("About");
 
-            entity.Property(e => e.AboutId)
-                .ValueGeneratedNever()
-                .HasColumnName("AboutID");
-            entity.Property(e => e.Content).HasColumnType("text");
+            entity.Property(e => e.AboutId).HasColumnName("AboutID");
+            entity.Property(e => e.Contents).HasMaxLength(255);
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Images).HasMaxLength(50);
+            entity.Property(e => e.Links).HasMaxLength(255);
             entity.Property(e => e.ModifiedBy)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Title)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+            entity.Property(e => e.Title).HasMaxLength(255);
         });
 
       
@@ -151,13 +149,12 @@ public partial class HarmicContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.Profiles)
                 .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Profile_tb_Account");
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.ServiceId).HasName("PK__Services__C51BB0EAB73C9BD4");
+            entity.HasKey(e => e.ServiceId).HasName("PK__Services__C51BB0EA161E303D");
 
             entity.Property(e => e.ServiceId)
                 .ValueGeneratedNever()
@@ -183,6 +180,32 @@ public partial class HarmicContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<Slider>(entity =>
+        {
+            entity.HasKey(e => e.Sliderid).HasName("PK__Sliders__3213E83FFC214AEC");
+
+            entity.Property(e => e.Sliderid).HasColumnName("sliderid");
+            entity.Property(e => e.Description)
+                .HasColumnType("text")
+                .HasColumnName("description");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("image_url");
+            entity.Property(e => e.Link)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("link");
+            entity.Property(e => e.Subtitle)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("subtitle");
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("title");
+        });
+
         modelBuilder.Entity<TbAccount>(entity =>
         {
             entity.HasKey(e => e.AccountId);
@@ -200,6 +223,7 @@ public partial class HarmicContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.TbAccounts)
                 .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_tb_Account_tb_Role");
         });
 
@@ -223,10 +247,12 @@ public partial class HarmicContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.TbBlogs)
                 .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_tb_Post_tb_Account");
 
             entity.HasOne(d => d.Category).WithMany(p => p.TbBlogs)
                 .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_tb_Post_tb_Category");
         });
 
@@ -244,6 +270,7 @@ public partial class HarmicContext : DbContext
 
             entity.HasOne(d => d.Blog).WithMany(p => p.TbBlogComments)
                 .HasForeignKey(d => d.BlogId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_tb_BlogComment_tb_Blog");
         });
 
@@ -296,32 +323,6 @@ public partial class HarmicContext : DbContext
             entity.Property(e => e.ModifiedBy).HasMaxLength(150);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Title).HasMaxLength(150);
-        });
-
-        modelBuilder.Entity<TbNews>(entity =>
-        {
-            entity.HasKey(e => e.NewsId);
-
-            entity.ToTable("tb_News");
-
-            entity.Property(e => e.Alias).HasMaxLength(250);
-            entity.Property(e => e.CreatedBy).HasMaxLength(150);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.Description).HasMaxLength(4000);
-            entity.Property(e => e.Image).HasMaxLength(500);
-            entity.Property(e => e.IsActive)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
-            entity.Property(e => e.ModifiedBy).HasMaxLength(150);
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.SeoDescription).HasMaxLength(500);
-            entity.Property(e => e.SeoKeywords).HasMaxLength(250);
-            entity.Property(e => e.SeoTitle).HasMaxLength(250);
-            entity.Property(e => e.Title).HasMaxLength(250);
-
-            entity.HasOne(d => d.Category).WithMany(p => p.TbNews)
-                .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK_tb_News_tb_Category");
         });
 
         modelBuilder.Entity<TbRole>(entity =>

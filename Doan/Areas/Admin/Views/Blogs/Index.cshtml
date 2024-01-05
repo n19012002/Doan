@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Doan.Models.TbBlog>
-
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
 @{
     ViewData["Title"] = "Edit Blogs";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -15,6 +17,28 @@
                 <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
                 <li>Edit Blogs</li>
             </ul>
+        </div>
+        <!-- Add Filters -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <form asp-controller="Blogs" asp-action="Index" method="get">
+                    <div class="form-group">
+                        <label for="categoryFilter">Category:</label>
+                        <select class="form-control" name="categoryFilter" id="categoryFilter">
+                            <option value="">-- All Categories --</option>
+                            @foreach (var category in ViewBag.AllCategories)  
+                            {
+                                <option value="@category">@category</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchTitle">Search Title:</label>
+                        <input type="text" class="form-control" name="searchTitle" id="searchTitle" value="@ViewBag.SearchTitle" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </form>
+            </div>
         </div>
 
         <!-- Add Create New Button -->
@@ -88,6 +112,16 @@
                             </div>
                         }
                     </div>
+                    <div class="pagination-bx rounded-sm gray clearfix">
+                        @Html.PagedListPager((IPagedList)ViewBag.PaginatedBlogs, page => Url.Action("index", new { page = page }), new PagedListRenderOptions()
+                        {
+                        ActiveLiElementClass = "active",
+                        PageClasses = new[]{ "page-link"},
+                        LiElementClasses=new[] { "page-item" },
+                        UlElementClasses = new[] { "pagination", "justify-content-center"},
+                        })
+                    </div>
+
                 </div>
             </div>
             <!-- Your Blog List END -->

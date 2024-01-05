@@ -16,7 +16,7 @@ namespace Doan.Controllers
 			var items = _context.Events.Where(m => (bool)m.IsActive).OrderByDescending(i => i.EventId).ToList();
 			return View(items);
 		}
-		[Route("/event/{title}-{id}.html")]
+		[Route("/event-{slug}-{id:long}.html")]
 		public IActionResult Details(int? id)
 		{
 			if (id == null)

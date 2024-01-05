@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
+using X.PagedList;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -20,11 +21,39 @@ namespace Doan.Areas.Admin.Controllers
         }
 
         // GET: Admin/Blogs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string categoryFilter, string searchTitle, int? page)
         {
-            var harmicContext = _context.TbBlogs.Include(t => t.Account).Include(t => t.Category);
-            return View(await harmicContext.ToListAsync());
+            IQueryable<TbBlog> harmicContext = _context.TbBlogs.Include(t => t.Category);
+
+            // Phân trang
+            if (page == null) page = 1;
+            int pageSize = 4;
+         
+            if (!string.IsNullOrEmpty(categoryFilter))
+            {
+                harmicContext = harmicContext.Where(b => b.Category.Title == categoryFilter);
+            }
+           
+            if (!string.IsNullOrEmpty(searchTitle))
+            {
+                string lowerSearchTitle = searchTitle.ToLower();
+                harmicContext = harmicContext.Where(b => EF.Functions.Like(b.Title.ToLower(), $"%{lowerSearchTitle}%"));
+            }
+           
+            ViewBag.CategoryFilter = categoryFilter;
+            ViewBag.SearchTitle = searchTitle;
+
+           
+            ViewBag.AllCategories = await _context.TbCategories.Select(c => c.Title).ToListAsync();
+       
+            var paginatedBlogs = await harmicContext.AsQueryable().ToPagedListAsync(page ?? 1, pageSize);
+            
+            ViewBag.PaginatedBlogs = paginatedBlogs;
+
+            return View(paginatedBlogs);
         }
+
+
 
         // GET: Admin/Blogs/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -50,7 +79,7 @@ namespace Doan.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewData["AccountId"] = new SelectList(_context.TbAccounts, "AccountId", "AccountId");
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "CategoryId");
+            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "Title");
             return View();
         }
 
@@ -70,7 +99,7 @@ namespace Doan.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountId"] = new SelectList(_context.TbAccounts, "AccountId", "AccountId", tbBlog.AccountId);
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "CategoryId", tbBlog.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "Title", tbBlog.CategoryId);
             return View(tbBlog);
         }
 
@@ -88,7 +117,7 @@ namespace Doan.Areas.Admin.Controllers
                 return NotFound();
             }
             ViewData["AccountId"] = new SelectList(_context.TbAccounts, "AccountId", "AccountId", tbBlog.AccountId);
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "CategoryId", tbBlog.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "Title", tbBlog.CategoryId);
             return View(tbBlog);
         }
 
@@ -108,7 +137,9 @@ namespace Doan.Areas.Admin.Controllers
             {
                 try
                 {
-                    tbBlog.ModifiedDate = DateTime.Now;
+					// Thiết lập CreatedDate trước khi cập nhật
+					tbBlog.CreatedDate = _context.TbBlogs.AsNoTracking().Where(b => b.BlogId == tbBlog.BlogId).Select(b => b.CreatedDate).FirstOrDefault();
+					tbBlog.ModifiedDate = DateTime.Now;
                     _context.Update(tbBlog);
                     await _context.SaveChangesAsync();
                 }
@@ -126,7 +157,7 @@ namespace Doan.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AccountId"] = new SelectList(_context.TbAccounts, "AccountId", "AccountId", tbBlog.AccountId);
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "CategoryId", tbBlog.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "CategoryId", "Title", tbBlog.CategoryId);
             return View(tbBlog);
         }
 

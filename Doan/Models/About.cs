@@ -9,7 +9,7 @@ public partial class About
 
     public string Title { get; set; } = null!;
 
-    public string? Content { get; set; }
+    public string? Contents { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
@@ -18,4 +18,8 @@ public partial class About
     public string? ModifiedBy { get; set; }
 
     public bool? IsActive { get; set; }
+
+    public string? Images { get; set; }
+
+    public string? Links { get; set; }
 }

@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Event>
-
+@using Doan.Utilities
 <!-- Content -->
     <div class="page-content bg-white">
         <!-- inner page banner -->
@@ -49,7 +49,8 @@
 						<ul id="masonry" class="ttr-gallery-listing magnific-image row">
 							@foreach (var item in Model)
 						{
-							var sUrl = $"/event/{item.Title}-{item.EventId}.html";
+							string sUrl = Functions.TitleSlugGeneration("Event", item.Title, item.EventId);
+							
 							<li class="action-card col-lg-6 col-md-6 col-sm-12">
 								<div class="event-bx m-b30">
 									<div class="action-box">

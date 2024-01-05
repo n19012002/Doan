@@ -32,7 +32,7 @@ namespace Doan.Controllers
 			// Sắp xếp theo BlogId giảm dần
 			var blogs = blogsQuery.OrderByDescending(i => i.BlogId).ToPagedList((int)page, pageSize);
 
-			ViewBag.blogComment = _context.TbBlogComments.ToList();
+			ViewBag.blogComment = _context.TbBlogComments.Where(i => (bool)i.IsActive).ToList();
 
 			return View(blogs);
 		}

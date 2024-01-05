@@ -1,7 +1,15 @@
-using Doan.Models;
+﻿using Doan.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSession(cfg =>
+{
+	// Đăng ký dịch vụ Session
+	cfg.Cookie.Name = "DoAnWeb"; // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+	cfg.IdleTimeout = new TimeSpan(0, 30, 0); // Thời gian tồn tại của Session
+	cfg.Cookie.HttpOnly = true;
+	cfg.Cookie.IsEssential = true;
+});
 
 builder.Services.AddDbContext<HarmicContext>(options =>
 {
@@ -11,6 +19,7 @@ builder.Services.AddDbContext<HarmicContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -26,7 +35,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.UseEndpoints(endpoints =>
 {
 	endpoints.MapControllerRoute(

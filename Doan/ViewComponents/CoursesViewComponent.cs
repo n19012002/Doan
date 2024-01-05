@@ -13,7 +13,7 @@ namespace Doan.ViewComponents
 		}
 		public IViewComponentResult Invoke()
 		{
-			// Lấy danh sách các khóa học từ cơ sở dữ liệu
+			
 			var courses = _context.Courses.ToList();
 
 			return View(courses);
