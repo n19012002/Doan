@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -22,6 +23,8 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/BlogComments
         public async Task<IActionResult> Index()
         {
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
             var harmicContext = _context.TbBlogComments.Include(t => t.Blog);
             return View(await harmicContext.ToListAsync());
         }

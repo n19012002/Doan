@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -22,7 +23,9 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/Abouts
         public async Task<IActionResult> Index()
         {
-              return _context.Abouts != null ? 
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
+            return _context.Abouts != null ? 
                           View(await _context.Abouts.ToListAsync()) :
                           Problem("Entity set 'HarmicContext.Abouts'  is null.");
         }

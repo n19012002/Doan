@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Doan.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Doan.Areas.Admin.Controllers
@@ -9,8 +10,9 @@ namespace Doan.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
-            
-           
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
+
             return View();
         }
     }

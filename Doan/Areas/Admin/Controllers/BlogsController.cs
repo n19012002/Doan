@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
 using X.PagedList;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -23,6 +24,8 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/Blogs
         public async Task<IActionResult> Index(string categoryFilter, string searchTitle, int? page)
         {
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
             IQueryable<TbBlog> harmicContext = _context.TbBlogs.Include(t => t.Category);
 
             // Phân trang

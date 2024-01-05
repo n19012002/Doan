@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -22,7 +23,9 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/Events
         public async Task<IActionResult> Index()
         {
-              return _context.Events != null ? 
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
+            return _context.Events != null ? 
                           View(await _context.Events.ToListAsync()) :
                           Problem("Entity set 'HarmicContext.Events'  is null.");
         }

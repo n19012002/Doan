@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -22,7 +23,9 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/Menus
         public async Task<IActionResult> Index()
         {
-              return _context.TbMenus != null ? 
+            if (!Functions.IsLogin())
+                return RedirectToAction("Index", "Adminlogin");
+            return _context.TbMenus != null ? 
                           View(await _context.TbMenus.ToListAsync()) :
                           Problem("Entity set 'HarmicContext.TbMenus'  is null.");
         }

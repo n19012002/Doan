@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Doan.Areas.Admin.Models;
+using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -28,7 +29,7 @@ namespace Doan.Areas.Admin.Controllers
         .Include(u => u.Role)
         .FirstOrDefault(u => u.Username == username);
 
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password) && user.Role != null && user.Role.RoleName == "Admin")
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password) && user.Role != null  )
             {
                 if (user.IsActive == false)
                 {
@@ -36,15 +37,26 @@ namespace Doan.Areas.Admin.Controllers
                 }
                 else
                 {
-                    // Cập nhật thời gian đăng nhập lần cuối
-                    user.LastLogin = DateTime.Now;
+                    if(user.Role.RoleName == "User")
+                    {
+                        TempData["ErrorMessage"] = "Bạn không đủ tuổi vào đây";
+                    }
+                    else
+                    {
+                        // Cập nhật thời gian đăng nhập lần cuối
+                        user.LastLogin = DateTime.Now;
 
-                    // Lưu các thay đổi vào cơ sở dữ liệu
-                    _context.SaveChanges();
-                    HttpContext.Session.SetInt32("IsLoggedIn", 1);
-                    HttpContext.Session.SetString("UserName", user.FullName);
-                    HttpContext.Session.SetString("UserName1", user.Username);
-                    TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                        // Lưu các thay đổi vào cơ sở dữ liệu
+                        _context.SaveChanges();
+                        HttpContext.Session.SetInt32("IsLoggedIn", 1);
+                        HttpContext.Session.SetString("UserName", user.FullName);
+                        HttpContext.Session.SetString("UserName1", user.Username);
+                        Functions._AccountId = user.AccountId;
+                        Functions._Username = user.FullName;
+                        Functions._Email = user.Email;
+                        TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    }
+                   
                 }
 
 
@@ -61,8 +73,10 @@ namespace Doan.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index");
+            Functions._AccountId = 0;
+            Functions._Email = string.Empty;
+            Functions._Username = string.Empty;
+            return RedirectToAction("Index", "Adminlogin");
         }
 
         [HttpGet]
@@ -76,7 +90,7 @@ namespace Doan.Areas.Admin.Controllers
                     .Include(u => u.Profiles)
                     .FirstOrDefault(u => u.Username == username);
 
-                if (user != null && user.Role != null && user.Role.RoleName == "User")
+                if (user != null && user.Role != null && user.Role.RoleName == "Admin")
                 {
                     return View(user);
                 }
@@ -123,7 +137,7 @@ namespace Doan.Areas.Admin.Controllers
                         FullName = model.FullName,
                         Phone = model.Phone,
                         Email = model.Email,
-                        RoleId = 2,
+                        RoleId = 1,
                         IsActive = true
                     };
 
