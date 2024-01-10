@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Doan.Models.TbEvent>
+﻿
+
+
+@model IEnumerable<Doan.Models.Event>
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList.Web.Common;
@@ -18,7 +21,7 @@
                 <li>Events</li>
             </ul>
         </div>
-
+       
 
         <!-- Add Create New Button -->
         <div class="row mb-4">
@@ -64,7 +67,7 @@
                                                     <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@blog.EventId" data-id="@blog.EventId" data-isactive="@blog.IsActive.ToString().ToLower()" checked="@blog.IsActive" />
 
                                                     <label class="custom-control-label" for="isActiveCheckbox_@blog.EventId">
-
+                                                        
                                                     </label>
                                                 </div>
                                             </li>
@@ -126,39 +129,8 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            let _id; // Thêm biến cục bộ
-
-            $(".btn-delete").click(function () {
-                _id = $(this).data("id");
-
-                // Mở modal
-                $("#deleteConfirmationModal").modal("show");
-
-                // Xác nhận xóa
-                $("#confirmDeleteBtn").click(function () {
-                    $.ajax({
-                        url: "/admin/events/delete",
-                        type: "POST",
-                        data: { id: _id },
-                        success: function (result) {
-                            if (result) {
-                                $("#tr_" + _id).remove();
-                                toastr.success('Xóa thành công');
-                            }
-                            else {
-                                toastr.error('Xóa không thành công');
-                            }
-                        }
-                    });
-
-                    // Đóng modal sau khi xác nhận xóa
-                    $("#deleteConfirmationModal").modal("hide");
-                });
-            });
-        });
-    </script>
+    <script src="~/admin/assets/js/delete.js">
+</script>
 
     <script>
         $(document).ready(function () {
@@ -168,7 +140,7 @@
 
 
                 $.ajax({
-                    url: "/admin/events/toggleIsActive",
+                    url: "/admin/blogs/toggleIsActive",
                     type: "POST",
                     data: { id: _id, isActive: isChecked },
                     success: function (result) {

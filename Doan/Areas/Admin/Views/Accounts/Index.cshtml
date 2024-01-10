@@ -1,20 +1,18 @@
-﻿@model IEnumerable<Doan.Models.TbMenu>
+﻿@model IEnumerable<Doan.Models.TbAccount>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-
-
 <!-- Main container start -->
 <main class="ttr-wrapper">
     <div class="container-fluid">
         <div class="db-breadcrumb">
-            <h4 class="breadcrumb-title">Menu List</h4>
+            <h4 class="breadcrumb-title">Account List</h4>
             <ul class="db-breadcrumb-list">
                 <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                <li>Menu List</li>
+                <li>Accont List</li>
             </ul>
         </div>
 
@@ -32,13 +30,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>MenuId</th>
-                            <th>Title</th>
-                            <th>Alias</th>
-                            <th>Description</th>
-                            <th>Levels</th>
-                            <th>ParentId</th>
-                            <th>Position</th>
+                            <th>STT</th>
+                            <th>UserName</th>
+                            <th>Password</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            
 
                             <th>IsActive</th>
                             <th>Actions</th>
@@ -50,25 +48,36 @@
                         }
                         @foreach (var menu in Model)
                         {
-                            <tr id="tr_@menu.MenuId">
+                            <tr id="tr_@menu.AccountId">
                                 <td>@(i++)</td>
-                                <td>@menu.Title</td>
-                                <td>@menu.Alias</td>
-                                <td>@menu.Description</td>
-                                <td>@menu.Levels</td>
-                                <td>@menu.ParentId</td>
-                                <td>@menu.Position</td>
+                                <td>@menu.Username</td>
+                                <td>
+                                    <!-- Hiển thị chỉ một phần của mật khẩu -->
+                                    @if (menu.Password.Length > 5)
+                                    {
+                                        <span>@menu.Password.Substring(0, 5)...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@menu.Password</span>
+                                    }
+                                </td>
+                                <td>@menu.FullName</td>
                                 
+                                <td>@menu.Email</td>
+                                <td>@menu.Role.RoleName</td>
+
                                 <td>
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@menu.MenuId" data-id="@menu.MenuId" data-isactive="@menu.IsActive.ToString().ToLower()" checked="@menu.IsActive" />
-                                        <label class="custom-control-label" for="isActiveCheckbox_@menu.MenuId"></label>
+                                        <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@menu.AccountId" data-id="@menu.AccountId" data-isactive="@menu.IsActive.ToString().ToLower()" checked="@menu.IsActive" />
+
+                                        <label class="@(menu.IsActive ? "ti-unlock" : "ti-lock")" for="isActiveCheckbox_@menu.AccountId"></label>
                                     </div>
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@menu.MenuId" class="btn blue radius-xl outline">Edit</a>
-                                    <a asp-action="Details" asp-route-id="@menu.MenuId" class="btn green radius-xl outline">Details</a>
-                                    <a data-toggle="modal" data-target="#deleteConfirmationModal" data-id="@menu.MenuId" class="btn red outline radius-xl btn-delete">Delete</a>
+                                    <a asp-action="Edit" asp-route-id="@menu.AccountId" class="btn blue radius-xl outline">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@menu.AccountId" class="btn green radius-xl outline">Details</a>
+                                    <a data-toggle="modal" data-target="#deleteConfirmationModal" data-id="@menu.AccountId" class="btn red outline radius-xl btn-delete">Delete</a>
                                 </td>
                             </tr>
                         }
@@ -104,18 +113,18 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            let _id; // Thêm biến cục bộ
+            let _id;
 
             $(".btn-delete").click(function () {
                 _id = $(this).data("id");
 
-                // Mở modal
+                
                 $("#deleteConfirmationModal").modal("show");
 
-                // Xác nhận xóa 
+              
                 $("#confirmDeleteBtn").click(function () {
                     $.ajax({
-                        url: "/admin/menus/delete",
+                        url: "/admin/Accounts/delete",
                         type: "POST",
                         data: { id: _id },
                         success: function (result) {
@@ -129,34 +138,36 @@
                         }
                     });
 
-                    // Đóng modal sau khi xác nhận xóa
+                   
                     $("#deleteConfirmationModal").modal("hide");
                 });
             });
         });
-    </script>
 
-    <script>
         $(document).ready(function () {
             $(".custom-control-input").change(function () {
                 var _id = $(this).data("id");
                 var isChecked = $(this).prop("checked");
 
-                // Gửi yêu cầu AJAX để cập nhật trạng thái IsActive
+               
                 $.ajax({
-                    url: "/admin/menus/toggleIsActive",
+                    url: "/admin/Accounts/toggleIsActive",
                     type: "POST",
                     data: { id: _id, isActive: isChecked },
                     success: function (result) {
-                        if (result) {
-                            // Cập nhật giao diện người dùng
+                        if (result) {         
                             $(".custom-control-input[data-id='" + _id + "']").data("isactive", isChecked);
-                            if(isChecked){
-                                toastr.success('Đã hiện menu');
-                            }else{
-                                toastr.error('Đã ẩn menu');
+                            if (isChecked) {
+                                toastr.success('Đã mở khóa');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                toastr.error('Đã khóa');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
                             }
-                            
                         } else {
                             toastr.error('Cập nhật không thành công');
                         }
@@ -164,6 +175,6 @@
                 });
             });
         });
-
     </script>
 }
+

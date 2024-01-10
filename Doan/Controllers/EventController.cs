@@ -1,5 +1,6 @@
 ﻿using Doan.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doan.Controllers
 {
@@ -13,9 +14,11 @@ namespace Doan.Controllers
 		}
 		public IActionResult Index()
 		{
-			var items = _context.Events.Where(m => (bool)m.IsActive).OrderByDescending(i => i.EventId).ToList();
+			var items = _context.TbEvents
+				.Where(m => (bool)m.IsActive).OrderByDescending(i => i.EventId).ToList();
 			return View(items);
 		}
+
 		[Route("/event-{slug}-{id:long}.html")]
 		public IActionResult Details(int? id)
 		{
@@ -23,7 +26,7 @@ namespace Doan.Controllers
 			{
 				return NotFound();
 			}
-			var post = _context.Events.Where(i => i.EventId == id && (bool)i.IsActive).FirstOrDefault();
+			var post = _context.TbEvents.Where(i => i.EventId == id && (bool)i.IsActive).FirstOrDefault();
 			if (post == null)
 			{
 				return NotFound();

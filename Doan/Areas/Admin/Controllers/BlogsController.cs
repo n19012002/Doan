@@ -140,7 +140,7 @@ namespace Doan.Areas.Admin.Controllers
             {
                 try
                 {
-					// Thiết lập CreatedDate trước khi cập nhật
+					
 					tbBlog.CreatedDate = _context.TbBlogs.AsNoTracking().Where(b => b.BlogId == tbBlog.BlogId).Select(b => b.CreatedDate).FirstOrDefault();
 					tbBlog.ModifiedDate = DateTime.Now;
                     _context.Update(tbBlog);

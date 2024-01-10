@@ -1,11 +1,11 @@
-﻿@model Event
+﻿@model TbEvent
 	<!-- Content -->
 <div class="page-content bg-white">
 	<!-- inner page banner -->
 	<div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
 		<div class="container">
 			<div class="page-banner-entry">
-				<h1 class="text-white">Events Details</h1>
+				<h1 class="text-white">Chi tiết sự kiện</h1>
 			</div>
 		</div>
 	</div>
@@ -13,8 +13,8 @@
 	<div class="breadcrumb-row">
 		<div class="container">
 			<ul class="list-inline">
-				<li><a href="#">Home</a></li>
-				<li>Events Details</li>
+				<li><a href="#">Trang chủ</a></li>
+				<li>Chi tiết sự kiện</li>
 			</ul>
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 					<div class="col-lg-8 col-md-7 col-sm-12">
 						<div class="courses-post">
 							<div class="ttr-post-media media-effect">
-								<a href="#"><img src="~/assets/images/blog/default/thum1.jpg" alt=""></a>
+								<a href="#"><img src="@Model.ImageUrl" alt=""></a>
 							</div>
 							<div class="ttr-post-info">
 								<div class="ttr-post-title ">

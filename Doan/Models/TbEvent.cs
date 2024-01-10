@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Doan.Models;
 
-public partial class Event
+public partial class TbEvent
 {
     public int EventId { get; set; }
 

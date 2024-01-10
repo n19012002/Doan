@@ -48,9 +48,7 @@ namespace Doan.Areas.Admin.Controllers
 
                         // Lưu các thay đổi vào cơ sở dữ liệu
                         _context.SaveChanges();
-                        HttpContext.Session.SetInt32("IsLoggedIn", 1);
-                        HttpContext.Session.SetString("UserName", user.FullName);
-                        HttpContext.Session.SetString("UserName1", user.Username);
+
                         Functions._AccountId = user.AccountId;
                         Functions._Username = user.FullName;
                         Functions._Email = user.Email;

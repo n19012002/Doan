@@ -18,11 +18,11 @@ public partial class HarmicContext : DbContext
 
     public virtual DbSet<About> Abouts { get; set; }
 
-	public DbSet<AdminMenu> AdminMenus { get; set; }
+    public DbSet<AdminMenu> AdminMenus { get; set; }
 
-	public virtual DbSet<Course> Courses { get; set; }
+    public virtual DbSet<Course> Courses { get; set; }
 
-    public virtual DbSet<Event> Events { get; set; }
+    public virtual DbSet<EventCategory> EventCategories { get; set; }
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
@@ -39,6 +39,8 @@ public partial class HarmicContext : DbContext
     public virtual DbSet<TbCategory> TbCategories { get; set; }
 
     public virtual DbSet<TbContact> TbContacts { get; set; }
+
+    public virtual DbSet<TbEvent> TbEvents { get; set; }
 
     public virtual DbSet<TbMenu> TbMenus { get; set; }
 
@@ -72,7 +74,7 @@ public partial class HarmicContext : DbContext
             entity.Property(e => e.Title).HasMaxLength(255);
         });
 
-      
+       
 
         modelBuilder.Entity<Course>(entity =>
         {
@@ -93,38 +95,17 @@ public partial class HarmicContext : DbContext
             entity.Property(e => e.StartDate).HasColumnType("date");
         });
 
-        modelBuilder.Entity<Event>(entity =>
+        modelBuilder.Entity<EventCategory>(entity =>
         {
-            entity.HasKey(e => e.EventId).HasName("PK__Event__7944C8709C69EE67");
+            entity.ToTable("EventCategory");
 
-            entity.ToTable("Event");
-
-            entity.Property(e => e.EventId).HasColumnName("EventID");
-            entity.Property(e => e.Agenda).HasColumnType("text");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.Alias).HasMaxLength(150);
+            entity.Property(e => e.CreatedBy).HasMaxLength(150);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.Description).HasColumnType("text");
-            entity.Property(e => e.EndDate).HasColumnType("datetime");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("ImageURL");
-            entity.Property(e => e.Location)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.ModifiedBy)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.RegistrationLink)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Speakers).HasColumnType("text");
-            entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.Title)
-                .HasMaxLength(255)
-                .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.ModifiedBy).HasMaxLength(150);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(150);
         });
 
         modelBuilder.Entity<Profile>(entity =>
@@ -186,23 +167,19 @@ public partial class HarmicContext : DbContext
 
             entity.Property(e => e.Sliderid).HasColumnName("sliderid");
             entity.Property(e => e.Description)
-                .HasColumnType("text")
+                .HasMaxLength(255)
                 .HasColumnName("description");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("image_url");
             entity.Property(e => e.Link)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("link");
             entity.Property(e => e.Subtitle)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("subtitle");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
-                .IsUnicode(false)
                 .HasColumnName("title");
         });
 
@@ -214,10 +191,8 @@ public partial class HarmicContext : DbContext
 
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.FullName).HasMaxLength(50);
-            entity.Property(e => e.LastLogin)
-                .HasMaxLength(10)
-                .IsFixedLength();
-            entity.Property(e => e.Password).HasMaxLength(50);
+            entity.Property(e => e.LastLogin).HasColumnType("datetime");
+            entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.Username).HasMaxLength(50);
 
@@ -286,9 +261,6 @@ public partial class HarmicContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.ModifiedBy).HasMaxLength(150);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.SeoDescription).HasMaxLength(500);
-            entity.Property(e => e.SeoKeywords).HasMaxLength(250);
-            entity.Property(e => e.SeoTitle).HasMaxLength(250);
             entity.Property(e => e.Title).HasMaxLength(150);
         });
 
@@ -305,6 +277,39 @@ public partial class HarmicContext : DbContext
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(150);
             entity.Property(e => e.Phone).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TbEvent>(entity =>
+        {
+            entity.HasKey(e => e.EventId).HasName("PK__Event__7944C8709C69EE67");
+
+            entity.ToTable("tb_Event");
+
+            entity.Property(e => e.EventId).HasColumnName("EventID");
+            entity.Property(e => e.Agenda).HasMaxLength(250);
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ImageURL");
+            entity.Property(e => e.Location).HasMaxLength(255);
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.RegistrationLink)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Speakers).HasMaxLength(250);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(255);
+
+            entity.HasOne(d => d.EventCategory).WithMany(p => p.TbEvents)
+                .HasForeignKey(d => d.EventCategoryId)
+                .HasConstraintName("FK_Event_EventCategory");
         });
 
         modelBuilder.Entity<TbMenu>(entity =>

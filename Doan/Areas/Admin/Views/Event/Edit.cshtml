@@ -1,0 +1,117 @@
+﻿
+@model Doan.Models.Event
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Main container start -->
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Edit Blog</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Edit Blog</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="widget-box">
+                    <div class="wc-title">
+                        <h4>Edit Blog</h4>
+                    </div>
+                    <div class="widget-inner">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="EventId" />
+
+                            <div class="form-group">
+                                <label asp-for="Title" class="control-label"></label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="from-group">
+                                <label class="control-lable">Images</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-success" type="button" onclick="openDialog()">Choose a pic</button>
+                                    </div>
+                                    <input type="text" class="form-control" asp-for="ImageUrl" id="file_input" aria-describedby="button-addon2">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Location" class="control-label"></label>
+                                <input asp-for="Location" class="form-control" />
+                                <span asp-validation-for="Location" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StartDate" class="control-label"></label>
+                                <input asp-for="StartDate" class="form-control" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EndDate" class="control-label"></label>
+                                <input asp-for="EndDate" class="form-control" />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StartTime" class="control-label"></label>
+                                <input asp-for="StartTime" class="form-control" />
+                                <span asp-validation-for="StartTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="EndTime" class="control-label"></label>
+                                <input asp-for="EndTime" class="form-control" />
+                                <span asp-validation-for="EndTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Agenda" class="control-label"></label>
+                                <input asp-for="Agenda" class="form-control" />
+                                <span asp-validation-for="Agenda" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Speakers" class="control-label"></label>
+                                <input asp-for="Speakers" class="form-control" />
+                                <span asp-validation-for="Speakers" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="IsActive" class="control-label"></label>
+                                <div class="custom-control custom-switch">
+                                    @Html.CheckBox("IsActive", Model.IsActive, new { @class = "custom-control-input" })
+                                    <label class="custom-control-label" for="IsActive"></label>
+                                </div>
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn green radius-xl outline" />
+                                <a asp-action="Index" class="btn red outline radius-xl btn-delete">Back to List</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@{
+    var summernote = new Doan.Areas.Admin.Models.Summernote("#Detail");
+
+}
+<partial name="_Summernote" model="summernote" />
+
+
+
+

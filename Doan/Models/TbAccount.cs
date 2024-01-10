@@ -19,7 +19,7 @@ public partial class TbAccount
 
     public int? RoleId { get; set; }
 
-	public DateTime? LastLogin { get; set; }
+    public DateTime? LastLogin { get; set; }
 
     public bool IsActive { get; set; }
 

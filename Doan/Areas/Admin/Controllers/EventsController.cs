@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Doan.Models;
-using Doan.Utilities;
 
 namespace Doan.Areas.Admin.Controllers
 {
@@ -23,34 +22,33 @@ namespace Doan.Areas.Admin.Controllers
         // GET: Admin/Events
         public async Task<IActionResult> Index()
         {
-            if (!Functions.IsLogin())
-                return RedirectToAction("Index", "Adminlogin");
-            return _context.Events != null ? 
-                          View(await _context.Events.ToListAsync()) :
-                          Problem("Entity set 'HarmicContext.Events'  is null.");
+            var harmicContext = _context.TbEvents.Include(t => t.EventCategory);
+            return View(await harmicContext.ToListAsync());
         }
 
         // GET: Admin/Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Events == null)
+            if (id == null || _context.TbEvents == null)
             {
                 return NotFound();
             }
 
-            var @event = await _context.Events
+            var tbEvent = await _context.TbEvents
+                .Include(t => t.EventCategory)
                 .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            if (tbEvent == null)
             {
                 return NotFound();
             }
 
-            return View(@event);
+            return View(tbEvent);
         }
 
         // GET: Admin/Events/Create
         public IActionResult Create()
         {
+            ViewData["EventCategoryId"] = new SelectList(_context.EventCategories, "EventCategoryId", "EventCategoryId");
             return View();
         }
 
@@ -59,31 +57,33 @@ namespace Doan.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,Title,Description,Location,StartDate,EndDate,StartTime,EndTime,Agenda,Speakers,RegistrationLink,ImageUrl,CreatedDate,CreatedBy,ModifiedBy,IsActive")] Event @event)
+        public async Task<IActionResult> Create([Bind("EventId,Title,Description,Location,StartDate,EndDate,StartTime,EndTime,Agenda,Speakers,RegistrationLink,ImageUrl,CreatedDate,CreatedBy,ModifiedBy,IsActive,EventCategoryId")] TbEvent tbEvent)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@event);
+                _context.Add(tbEvent);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+            ViewData["EventCategoryId"] = new SelectList(_context.EventCategories, "EventCategoryId", "EventCategoryId", tbEvent.EventCategoryId);
+            return View(tbEvent);
         }
 
         // GET: Admin/Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Events == null)
+            if (id == null || _context.TbEvents == null)
             {
                 return NotFound();
             }
 
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
+            var tbEvent = await _context.TbEvents.FindAsync(id);
+            if (tbEvent == null)
             {
                 return NotFound();
             }
-            return View(@event);
+            ViewData["EventCategoryId"] = new SelectList(_context.EventCategories, "EventCategoryId", "EventCategoryId", tbEvent.EventCategoryId);
+            return View(tbEvent);
         }
 
         // POST: Admin/Events/Edit/5
@@ -91,9 +91,9 @@ namespace Doan.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,Description,Location,StartDate,EndDate,StartTime,EndTime,Agenda,Speakers,RegistrationLink,ImageUrl,CreatedDate,CreatedBy,ModifiedBy,IsActive")] Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,Description,Location,StartDate,EndDate,StartTime,EndTime,Agenda,Speakers,RegistrationLink,ImageUrl,CreatedDate,CreatedBy,ModifiedBy,IsActive,EventCategoryId")] TbEvent tbEvent)
         {
-            if (id != @event.EventId)
+            if (id != tbEvent.EventId)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace Doan.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(@event);
+                    _context.Update(tbEvent);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EventExists(@event.EventId))
+                    if (!TbEventExists(tbEvent.EventId))
                     {
                         return NotFound();
                     }
@@ -118,49 +118,76 @@ namespace Doan.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+            ViewData["EventCategoryId"] = new SelectList(_context.EventCategories, "EventCategoryId", "EventCategoryId", tbEvent.EventCategoryId);
+            return View(tbEvent);
         }
 
         // GET: Admin/Events/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Events == null)
+            if (id == null || _context.TbEvents == null)
             {
                 return NotFound();
             }
 
-            var @event = await _context.Events
+            var tbEvent = await _context.TbEvents
+                .Include(t => t.EventCategory)
                 .FirstOrDefaultAsync(m => m.EventId == id);
-            if (@event == null)
+            if (tbEvent == null)
             {
                 return NotFound();
             }
 
-            return View(@event);
+            return View(tbEvent);
         }
 
         // POST: Admin/Events/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        //[ValidateAntiForgeryToken]
+        public async Task<bool> DeleteConfirmed(int id)
         {
-            if (_context.Events == null)
+            try
             {
-                return Problem("Entity set 'HarmicContext.Events'  is null.");
+                var tbBlog = await _context.TbEvents.FindAsync(id);
+                if (tbBlog != null)
+                {
+                    _context.TbEvents.Remove(tbBlog);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
             }
-            var @event = await _context.Events.FindAsync(id);
-            if (@event != null)
+            catch (Exception ex)
             {
-                _context.Events.Remove(@event);
+
+                Console.WriteLine($"Error in DeleteConfirmed: {ex.Message}");
+                return false;
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public IActionResult ToggleIsActive(int id)
+        {
+            var blog = _context.TbEvents.Find(id);
+
+            if (blog != null)
+            {
+                // Chuyển đổi trạng thái
+                blog.IsActive = !blog.IsActive;
+
+
+                _context.SaveChanges();
+
+
+                return Json(true);
+            }
+
+
+            return Json(false);
         }
 
-        private bool EventExists(int id)
+        private bool TbEventExists(int id)
         {
-          return (_context.Events?.Any(e => e.EventId == id)).GetValueOrDefault();
+          return (_context.TbEvents?.Any(e => e.EventId == id)).GetValueOrDefault();
         }
     }
 }

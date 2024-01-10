@@ -1,18 +1,19 @@
-﻿@model IEnumerable<Event>
+﻿@model IEnumerable<TbEvent>
+@using Doan.Utilities
 <!-- Form END -->
 <div class="section-area section-sp2">
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center heading-bx">
-                <h2 class="title-head m-b0">Upcoming <span>Events</span></h2>
-                <p class="m-b0">Upcoming Education Events To Feed Brain. </p>
+                <h2 class="title-head m-b0">Khu <span>Sự kiện</span></h2>
+                <p class="m-b0">Các sự kiện mới nhất của trường. </p>
             </div>
         </div>
         <div class="row">
             <div class="upcoming-event-carousel owl-carousel owl-btn-center-lr owl-btn-1 col-12 p-lr0  m-b30">
                 @foreach (var eventItem in Model)
                 {
-                    var sUrl = $"/event/{eventItem.Title}-{eventItem.EventId}.html";
+                    string sUrl = Functions.TitleSlugGeneration("Event", eventItem.Title, eventItem.EventId);
                     <div class="item">
                         <div class="event-bx">
                             <div class="action-box">
@@ -40,7 +41,7 @@
             </div>
         </div>
         <div class="text-center">
-            <a href="/Event" class="btn">View All Event</a>
+            <a href="/Event" class="btn">Xem tất cả sự kiện</a>
         </div>
     </div>
 </div>

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Doan.Models;
 
-public partial class TbCategory
+public partial class EventCategory
 {
-    public int CategoryId { get; set; }
+    public int EventCategoryId { get; set; }
 
     public string? Title { get; set; }
 
@@ -23,5 +23,5 @@ public partial class TbCategory
 
     public string? ModifiedBy { get; set; }
 
-    public virtual ICollection<TbBlog> TbBlogs { get; set; } = new List<TbBlog>();
+    public virtual ICollection<TbEvent> TbEvents { get; set; } = new List<TbEvent>();
 }

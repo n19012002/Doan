@@ -1,56 +1,84 @@
-﻿@model Doan.Models.Slider
+﻿
+
+@model Doan.Models.Slider
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<!-- Main container start -->
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Create Slider</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Create Blog</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<h4>Slider</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="from-group">
+                                <label class="control-lable">Images</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-success" type="button" onclick="openDialog()">Choose a pic</button>
+                                    </div>
+                                    <input type="text" class="form-control" asp-for="ImageUrl" id="file_input" aria-describedby="button-addon2">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Title" class="control-label">Title</label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                         
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label">Description</label>
+                                <input asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Link" class="control-label"></label>
+                                <input asp-for="Link" class="form-control" />
+                                <span asp-validation-for="Link" class="text-danger"></span>
+                            </div>
+
+                            <!-- Add other fields here -->
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="control-label">Is Active:</label>
+                                <input type="checkbox" name="IsActive" value="true" />
+                                <input type="hidden" name="IsActive" value="false" />
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn green radius-xl outline" />
+                        <a asp-action="Index" class="btn red outline radius-xl btn-delete">Back to List</a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Subtitle" class="control-label"></label>
-                <input asp-for="Subtitle" class="form-control" />
-                <span asp-validation-for="Subtitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Link" class="control-label"></label>
-                <input asp-for="Link" class="form-control" />
-                <span asp-validation-for="Link" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsActive" class="control-label"></label>
-                <input asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</main>
+@{
+    var summernote = new Doan.Areas.Admin.Models.Summernote("#Detail");
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+}
+<partial name="_Summernote" model="summernote" />

@@ -16,5 +16,6 @@ public partial class Slider
     public string? Description { get; set; }
 
     public string? Link { get; set; }
-	public bool? IsActive { get; set; }
+
+    public bool? IsActive { get; set; }
 }

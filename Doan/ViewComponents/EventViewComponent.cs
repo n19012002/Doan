@@ -13,7 +13,7 @@ namespace Doan.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var items = _context.Events.Where(m => (bool)m.IsActive).OrderByDescending(i => i.EventId).Take(5).ToList();
+            var items = _context.TbEvents.Where(m => (bool)m.IsActive).OrderByDescending(i => i.EventId).Take(5).ToList();
             
             return await Task.FromResult<IViewComponentResult>(View(items));
         }

@@ -1,15 +1,14 @@
-﻿@model Doan.Models.TbEvent
+﻿@model Doan.Models.Event
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Details";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Details</h1>
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>TbEvent</h4>
+    <h4>Event</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -102,17 +101,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.IsActive)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EventCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EventCategory.EventCategoryId)
-        </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="EventId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.EventId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

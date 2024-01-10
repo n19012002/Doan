@@ -1,66 +1,169 @@
-﻿@model IEnumerable<Doan.Models.Slider>
+﻿
+
+@model IEnumerable<Doan.Models.Slider>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subtitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Link)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subtitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Link)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Sliderid">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Sliderid">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Sliderid">Delete</a>
-            </td>
-        </tr>
+
+<!-- Main container start -->
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Menu List</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li>Menu List</li>
+            </ul>
+        </div>
+
+        <!-- Add Create New Button -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <a asp-action="Create" class="btn navy radius-xl outline">Create New</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Your Menu List -->
+            <div class="col-lg-12 m-b30 table-container">
+                <!-- Thêm class "table-container" ở đây -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Link</th>
+                            <th>IsActiv</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var i = 1;
+                        }
+                        @foreach (var menu in Model)
+                        {
+                            <tr id="tr_@menu.Sliderid">
+                                <td>@(i++)</td>
+                                <td><img style="max-width: 200px" src="@menu.ImageUrl"/></td>
+                               
+                                <td>@menu.Title</td>
+                                <td>@menu.Description</td>
+                                <td>@menu.Link</td>
+                             
+                                
+                                
+                                <td>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="isActiveCheckbox_@menu.Sliderid" data-id="@menu.Sliderid" data-isactive="@menu.IsActive.ToString().ToLower()" checked="@menu.IsActive" />
+                                        <label class="custom-control-label" for="isActiveCheckbox_@menu.Sliderid"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@menu.Sliderid" class="btn blue radius-xl outline">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@menu.Sliderid" class="btn green radius-xl outline">Details</a>
+                                    <a data-toggle="modal" data-target="#deleteConfirmationModal" data-id="@menu.Sliderid" class="btn red outline radius-xl btn-delete">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Your Menu List END -->
+        </div>
+    </div>
+</main>
+
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn green radius-xl outline" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn red outline radius-xl " id="confirmDeleteBtn">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let _id; 
+
+            $(".btn-delete").click(function () {
+                _id = $(this).data("id");
+
+               
+                $("#deleteConfirmationModal").modal("show");
+
+              
+                $("#confirmDeleteBtn").click(function () {
+                    $.ajax({
+                        url: "/admin/sliders/delete",
+                        type: "POST",
+                        data: { id: _id },
+                        success: function (result) {
+                            if (result) {
+                                $("#tr_" + _id).remove();
+                                toastr.success('Xóa thành công');
+                            }
+                            else {
+                                toastr.error('Xóa không thành công');
+                            }
+                        }
+                    });
+
+                   
+                    $("#deleteConfirmationModal").modal("hide");
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".custom-control-input").change(function () {
+                var _id = $(this).data("id");
+                var isChecked = $(this).prop("checked");
+
+                $.ajax({
+                    url: "/admin/sliders/toggleIsActive",
+                    type: "POST",
+                    data: { id: _id, isActive: isChecked },
+                    success: function (result) {
+                        if (result) {
+                            
+                            $(".custom-control-input[data-id='" + _id + "']").data("isactive", isChecked);
+                            if(isChecked){
+                                toastr.success('Đã hiện slider');
+                            }else{
+                                toastr.error('Đã ẩn slider');
+                            }
+                           
+                        } else {
+                            toastr.error('Cập nhật không thành công');
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
 }
-    </tbody>
-</table>
+
